@@ -12,8 +12,8 @@ height = st.sidebar.slider("Высота", 500, 1200, 700)
 directed = st.sidebar.checkbox("Направленный граф", True)
 physics = st.sidebar.checkbox("Физика", True)
 hierarchical = st.sidebar.checkbox("Иерархический", False)
-max_depth = st.sidebar.slider("Максимальная глубина", 1, 2, 1)  # Default depth is 1
-max_friends = st.sidebar.slider("Максимальное количество друзей на пользователя", 50, 500, 100)  # Limit friends per user
+max_depth = st.sidebar.slider("Максимальная глубина", 1, 2, 1)  
+max_friends = st.sidebar.slider("Максимальное количество друзей на пользователя", 10, 500, 10)  
 
 # VK API Токен доступа
 VK_ACCESS_TOKEN = 'vk1.a._ZP8N4w0BSTCk-fISjTOgReVKzMnxQYnw1uQckRSMTVf6azvBzYaTOL82BzebLr4XXMkg5o8cRgrCPiDKO-b674asRNIHZJDVkvZ5mW3Nw5JIwqfOnHVtHFqYco5vqZfY-YKtIwdJHEEWdvw-50_NaJ5Fu6Rp40ZEHq4wUNeRdRXw0leacRDSVYEqUM28w4IZrk7RCGvdGTOsowN-2rQYQ'
@@ -127,24 +127,24 @@ def convert_graph_to_streamlit_format(G, vk_ids, group_vkid_to_name):
         batch_ids = user_ids[i:i+batch_size]
         try:
             users_info = vk.users.get(user_ids=batch_ids)
-            time.sleep(0.34)  # Sleep to respect VK API rate limits
+            time.sleep(0.34)  
             for user_info in users_info:
                 uid = user_info['id']
-                # For friends and friends of friends, we only use VK ID
+                
                 user_info_dict[uid] = f"VK ID {uid}"
         except vk_api.exceptions.ApiError as e:
-            # Handle errors gracefully
+            
             for uid in batch_ids:
-                user_info_dict[uid] = f"VK ID {uid}"  # Fallback to VK ID
+                user_info_dict[uid] = f"VK ID {uid}"  
             continue
 
-    # Create nodes and edges for visualization
+    # создание узлов и ребер визуализации
     for node in G.nodes:
         if node in group_vkid_to_name:
-            # For group members, use full names
+            # полные имена участников
             full_name = group_vkid_to_name[node]
             profile_url = f"https://vk.com/id{node}"
-            # Include centrality info
+            # информация по центральности
             centrality_info = (
                 f"Степень центральности: {degree_centrality[node]:.4f}\n"
                 f"Центральность посредничества: {betweenness_centrality[node]:.4f}\n"
@@ -153,7 +153,7 @@ def convert_graph_to_streamlit_format(G, vk_ids, group_vkid_to_name):
                 f"Профиль: {profile_url}"
             )
         else:
-            # For others, use VK ID as label
+            # для остальных только VK ID
             full_name = user_info_dict.get(node, f"VK ID {node}")
             centrality_info = ""
             profile_url = f"https://vk.com/id{node}"
@@ -168,7 +168,7 @@ def convert_graph_to_streamlit_format(G, vk_ids, group_vkid_to_name):
     for source, target in G.edges:
         edges.append(Edge(source=str(source), target=str(target)))
 
-    # Prepare centrality measures dataframe for group members
+    # центральность участников группы
     centrality_data = []
     for vk_id in vk_ids:
         if vk_id in G.nodes:
@@ -183,7 +183,7 @@ def convert_graph_to_streamlit_format(G, vk_ids, group_vkid_to_name):
             })
 
     centrality_df = pd.DataFrame(centrality_data)
-    # Round the centrality measures for better readability
+    
     centrality_df[['Степень центральности', 'Центральность посредничества',
                    'Центральность близости', 'Собственный вектор центральности']] = centrality_df[[
         'Степень центральности', 'Центральность посредничества',
@@ -191,10 +191,10 @@ def convert_graph_to_streamlit_format(G, vk_ids, group_vkid_to_name):
 
     return nodes, edges, centrality_df
 
-# Build the VK graph including friends of friends
+# Построение графа с друзьями друзей
 graph = build_vk_graph(vk_ids, max_depth=max_depth, max_friends=max_friends)
 
-# Check if initial VK IDs are connected
+
 components = list(nx.connected_components(graph))
 node_to_component = {}
 for idx, component in enumerate(components):
@@ -208,7 +208,7 @@ if len(initial_components) > 1:
 else:
     st.success("Все заданные VK ID связаны через друзей или друзей друзей.")
 
-# Convert the graph to the format compatible with streamlit-agraph and get centrality dataframe
+# Преобразования для streamlit
 nodes, edges, centrality_df = convert_graph_to_streamlit_format(graph, vk_ids, group_vkid_to_name)
 
 config = Config(
@@ -219,9 +219,9 @@ config = Config(
     hierarchical=hierarchical
 )
 
-# Create the agraph using streamlit-agraph
+# Создание графа с помощью streamlit-agraph
 return_value = agraph(nodes=nodes, edges=edges, config=config)
 
-# Display the centrality measures dataframe below the graph
+# Отображение по графикам
 st.write("### Центральность участников группы")
 st.dataframe(centrality_df)
