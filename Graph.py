@@ -5,7 +5,7 @@ import streamlit as st
 from streamlit_agraph import agraph, Node, Edge, Config
 import time
 
-# Sidebar configuration
+# Конфигурация графа
 st.sidebar.subheader("Настройки графа")
 width = st.sidebar.slider("Ширина", 500, 1200, 950)
 height = st.sidebar.slider("Высота", 500, 1200, 700)
@@ -15,17 +15,17 @@ hierarchical = st.sidebar.checkbox("Иерархический", False)
 max_depth = st.sidebar.slider("Максимальная глубина", 1, 2, 1)  # Default depth is 1
 max_friends = st.sidebar.slider("Максимальное количество друзей на пользователя", 50, 500, 100)  # Limit friends per user
 
-# VK API Access Token
-VK_ACCESS_TOKEN = '1931147'
+# VK API Токен доступа
+VK_ACCESS_TOKEN = 'vk1.a._ZP8N4w0BSTCk-fISjTOgReVKzMnxQYnw1uQckRSMTVf6azvBzYaTOL82BzebLr4XXMkg5o8cRgrCPiDKO-b674asRNIHZJDVkvZ5mW3Nw5JIwqfOnHVtHFqYco5vqZfY-YKtIwdJHEEWdvw-50_NaJ5Fu6Rp40ZEHq4wUNeRdRXw0leacRDSVYEqUM28w4IZrk7RCGvdGTOsowN-2rQYQ'
 
-# List of VK IDs and full names (Your group members)
+# Список VK ID участников группы
 group_members = [
     {'VK ID': 290530655, 'ФИО': 'Алимов Исмаил Рифатович'},
     {'VK ID': None, 'ФИО': 'Баклашкин Алексей Андреевич'},
     {'VK ID': 1931147, 'ФИО': 'Брежнев Вячеслав Александрович'},
     {'VK ID': 207227130, 'ФИО': 'Волков Матвей Андреевич'},
     {'VK ID': None, 'ФИО': 'Гаев Роман Алексеевич'},
-    {'VK ID': None, 'ФИО': 'Кирьянов Павел Александрович'},
+    {'VK ID': 24435047, 'ФИО': 'Кирьянов Павел Александрович'},
     {'VK ID': 138042735, 'ФИО': 'Кравцов Кирилл Егорович'},
     {'VK ID': 172244589, 'ФИО': 'Лавренченко Мария Кирилловна'},
     {'VK ID': 168420440, 'ФИО': 'Лагуткина Мария Сергеевна'},
@@ -33,7 +33,7 @@ group_members = [
     {'VK ID': None, 'ФИО': 'Орачев Алексей Валерьевич'},
     {'VK ID': None, 'ФИО': 'Панарин Родион Владимирович'},
     {'VK ID': 65657314, 'ФИО': 'Пешков Максим Юрьевич (староста)'},
-    {'VK ID': None, 'ФИО': 'Прозоров Евгений Иванович'},
+    {'VK ID': 176183602, 'ФИО': 'Прозоров Евгений Иванович'},
     {'VK ID': 50933461, 'ФИО': 'Свинаренко Владислав Александрович'},
     {'VK ID': None, 'ФИО': 'Союзов Владимир Александрович'},
     {'VK ID': 198216820, 'ФИО': 'Хренникова Ангелина Сергеевна'},
@@ -41,10 +41,10 @@ group_members = [
     {'VK ID': 268235974, 'ФИО': 'Яминов Руслан Вильевич'}
 ]
 
-# Extract VK IDs, excluding None values
+# Получание VK ID, за исключением отсутствующих
 vk_ids = [member['VK ID'] for member in group_members if member['VK ID'] is not None]
 
-# Create a mapping from VK ID to full name for group members
+# Создание связи между VK ID и ФИО
 group_vkid_to_name = {member['VK ID']: member['ФИО'] for member in group_members if member['VK ID'] is not None}
 
 st.write("## Граф социальной сети VK")
@@ -59,9 +59,9 @@ def build_vk_graph(vk_ids, max_depth=1, max_friends=100):
     G = nx.Graph()
 
     processed_ids = set()
-    queue = [(vk_id, 0) for vk_id in vk_ids]  # Initialize queue with initial VK IDs and depth 0
+    queue = [(vk_id, 0) for vk_id in vk_ids]  
 
-    private_profiles = set()  # To keep track of private profiles
+    private_profiles = set()  
     start_time = time.time()
 
     while queue:
@@ -76,10 +76,10 @@ def build_vk_graph(vk_ids, max_depth=1, max_friends=100):
             continue
 
         try:
-            # Get user's friends with a limit
+            # Получение списка друзей
             response = vk.friends.get(user_id=vk_id, count=max_friends)
             friends = response.get('items', [])
-            time.sleep(0.34)  # Sleep to respect VK API rate limits (max 3 requests/sec)
+            time.sleep(0.34)  # ограничение скорости запроса
 
             for friend_id in friends:
                 if friend_id not in G:
@@ -87,7 +87,7 @@ def build_vk_graph(vk_ids, max_depth=1, max_friends=100):
                 G.add_edge(vk_id, friend_id)
 
                 if friend_id not in processed_ids:
-                    queue.append((friend_id, depth + 1))  # Include friends of friends up to max_depth
+                    queue.append((friend_id, depth + 1))  # друзья друзей
 
         except vk_api.exceptions.ApiError as e:
             error_code = e.code
@@ -97,8 +97,8 @@ def build_vk_graph(vk_ids, max_depth=1, max_friends=100):
                 st.write(f"Ошибка при получении друзей для VK ID {vk_id}: {e}")
             continue
 
-        # Optional: Early stopping if computation takes too long
-        if time.time() - start_time > 300:  # 5 minutes timeout
+        # остановка вычислений если слишком много времени
+        if time.time() - start_time > 300:  # ограничение 5 мин
             st.warning("Время вычислений превышает лимит в 5 минут. Прерывание сбора данных.")
             break
 
@@ -112,16 +112,16 @@ def convert_graph_to_streamlit_format(G, vk_ids, group_vkid_to_name):
     nodes = []
     edges = []
 
-    # Calculate centrality measures for the entire graph
+    # показатели центральности графа
     degree_centrality = nx.degree_centrality(G)
     betweenness_centrality = nx.betweenness_centrality(G)
     closeness_centrality = nx.closeness_centrality(G)
     eigenvector_centrality = nx.eigenvector_centrality(G, max_iter=1000)
 
-    # Fetch user info for all unique user IDs in the graph (excluding group members)
+    # получение информации о пользователях на графике
     user_ids = [node for node in G.nodes if node not in group_vkid_to_name]
     user_info_dict = {}
-    batch_size = 1000  # VK API allows up to 1000 user IDs per request
+    batch_size = 1000  
 
     for i in range(0, len(user_ids), batch_size):
         batch_ids = user_ids[i:i+batch_size]
