@@ -204,7 +204,7 @@ for idx, component in enumerate(components):
 initial_components = set(node_to_component.get(vk_id) for vk_id in vk_ids if vk_id in node_to_component)
 
 if len(initial_components) > 1:
-    st.warning("Внимание: Нет связи между заданными VK ID даже через друзей друзей.")
+    st.warning("Нет прямых связей.")
 else:
     st.success("Все заданные VK ID связаны через друзей или друзей друзей.")
 
