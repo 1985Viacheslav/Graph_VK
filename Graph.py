@@ -16,7 +16,7 @@ max_depth = st.sidebar.slider("Максимальная глубина", 1, 2, 1
 max_friends = st.sidebar.slider("Максимальное количество друзей на пользователя", 10, 500, 10)  
 
 # VK API Токен доступа
-VK_ACCESS_TOKEN = 'QVVIWURyHNI88Gwm82VQ'
+VK_ACCESS_TOKEN = 'vk1.a.T8kcEhuhjv0TsC0rxOM6fgKfIWqMU3l_d902YBjrpqNW_BU0WVYpI4YVeNqwSfVqVmrttpFizl3fwgNPCP7t4g-nOnHqnhUsa2UHo7KVuC1KqBPH0gyvhFbqX7MfJKeJL8EP2-w0kdQpkEhYKko38SUWhQrouug2QeQOmLZxRu4viRJHAlEATxe1fNqzWMK-SAmStWxnqHaMxz5cDz3kJw2VQ'
 
 # Список VK ID участников группы
 group_members = [
