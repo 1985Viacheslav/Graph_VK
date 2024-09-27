@@ -27,3 +27,9 @@
 
 Ссылка для просмотра результатов (действительна в течение суток): https://graphvk-arv7gpp7kcvmsez4tmbebb.streamlit.app/
 
+Скрин результатов:
+
+![Graph_Visual](https://github.com/user-attachments/assets/44d4e45b-5a5b-4fd8-9e8f-a410a01ad336)
+
+![Graph_VK_results](https://github.com/user-attachments/assets/fe7bd392-5a20-4705-8c54-878c3570765b)
+
