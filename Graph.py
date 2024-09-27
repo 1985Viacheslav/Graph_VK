@@ -203,10 +203,6 @@ for idx, component in enumerate(components):
 
 initial_components = set(node_to_component.get(vk_id) for vk_id in vk_ids if vk_id in node_to_component)
 
-if len(initial_components) > 1:
-    st.warning("Нет прямых связей.")
-else:
-    st.success("Все заданные VK ID связаны через друзей или друзей друзей.")
 
 # Преобразования для streamlit
 nodes, edges, centrality_df = convert_graph_to_streamlit_format(graph, vk_ids, group_vkid_to_name)
