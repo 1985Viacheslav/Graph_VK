@@ -13,7 +13,7 @@ directed = st.sidebar.checkbox("Направленный граф", True)
 physics = st.sidebar.checkbox("Физика", True)
 hierarchical = st.sidebar.checkbox("Иерархический", False)
 max_depth = st.sidebar.slider("Максимальная глубина", 1, 2, 1)  
-max_friends = st.sidebar.slider("Максимальное количество друзей на пользователя", 10, 500, 10)  
+max_friends = st.sidebar.slider("Максимальное количество друзей на пользователя", 50, 500, 100)  
 
 # VK API Токен доступа
 VK_ACCESS_TOKEN = 'vk1.a.E8Q9hRefOz6nSCgBeM1T0V-13VHkE4dE0QATAb-uzA7EUPjDm6uIrl97_4Ikm8WZeRwdtwl7biXsQDxkdhlTUcv9jOYAVU6zSnFAt0aRRK7AzHrsFtr8XPnJOaCfe7twNf4hbTiWb1HD4bsY0g5Hb_Rrek5PaQwfVfb8F5PS5IbYv5JbaI7zthot3e1R4RjntiTGnG113F0HQc3rjIdUiQ'
