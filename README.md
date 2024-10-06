@@ -25,7 +25,7 @@
 
 Фреймворк для развёртывания веб-приложения: Streamlit 
 
-Ссылка для просмотра результатов (действительна в течение суток): https://graphvk-arv7gpp7kcvmsez4tmbebb.streamlit.app/
+Ссылка для просмотра результатов (действительна в течение суток): [https://graphvk-arv7gpp7kcvmsez4tmbebb.streamlit.app/](https://graphvk-83uyznm86dnm4vvssab7ta.streamlit.app/)
 
 Скрин результатов:
 
